@@ -111,6 +111,7 @@ public class MainMenu extends Application {
         view.getItems().add("Enter a list here");
         view.getItems().add("Enter a list here");
         view.getItems().add("Enter a list here");
+        view.getItems().add("Enter a list here");
 
         return view;
     }

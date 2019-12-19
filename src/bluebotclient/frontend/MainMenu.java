@@ -81,47 +81,60 @@ public class MainMenu extends Application {
         ObservableList<String> route = FXCollections.observableArrayList();
         BorderPane pane = new BorderPane();
 
-        Label label = new Label("Add command:");
+        Label addCommand = new Label("Add command:");
+        Label savedRoutes = new Label("Saved Routes: ");
         Button stop = new Button("Stop");
         Button forward = new Button("Forward");
         Button backwards = new Button("Backwards");
         Button left = new Button("Left");
         Button right = new Button("Right");
-        Button delete = new Button("Delete");
+        Button deleteCommand = new Button("Delete");
+        Button deleteRoute = new Button("Delete");
         Button save = new Button("Save");
-        ListView view = new ListView();
+        Button executeRoute = new Button("Execute route");
+
+        ListView newRoute = new ListView();
         ListView routeList = new ListView();
 
         stop.setOnAction(actionEvent -> {
-            view.getItems().add("Stop");
+            newRoute.getItems().add("Stop");
             route.add("Stop");
         });
 
         forward.setOnAction(actionEvent -> {
-            view.getItems().add("Forward");
+            newRoute.getItems().add("Forward");
             route.add("Forward");
         });
 
         backwards.setOnAction(actionEvent -> {
-            view.getItems().add("Backwards");
+            newRoute.getItems().add("Backwards");
             route.add("Backwards");
         });
 
         left.setOnAction(actionEvent -> {
-            view.getItems().add("Left");
+            newRoute.getItems().add("Left");
             route.add("Left");
         });
 
         right.setOnAction(actionEvent -> {
-            view.getItems().add("Right");
+            newRoute.getItems().add("Right");
             route.add("Right");
         });
 
-        delete.setOnAction(actionEvent -> {
-            int selectedIndices = view.getSelectionModel().getSelectedIndex();
+        deleteCommand.setOnAction(actionEvent -> {
+            int selectedIndices = newRoute.getSelectionModel().getSelectedIndex();
+
             if (selectedIndices != -1) {
-                view.getItems().remove(selectedIndices);
+                newRoute.getItems().remove(selectedIndices);
                 route.remove(selectedIndices);
+            }
+        });
+
+        deleteRoute.setOnAction(event -> {
+            int selectedRoute = routeList.getSelectionModel().getSelectedIndex();
+
+            if (selectedRoute != -1){
+                routeList.getItems().remove(selectedRoute);
             }
         });
 
@@ -131,20 +144,27 @@ public class MainMenu extends Application {
                 System.out.println(route.get(i));
             }
         });
+        HBox buttonBox1 = new HBox();
+        buttonBox1.setSpacing(10);
+        buttonBox1.getChildren().addAll(forward, backwards, left, right, stop);
 
-        HBox hBox = new HBox();
-        hBox.setSpacing(10);
-        hBox.getChildren().addAll(forward, backwards, left, right, stop);
+        HBox buttonBox2 = new HBox();
+        buttonBox2.setSpacing(10);
+        buttonBox2.getChildren().addAll(save, deleteCommand);
 
-        HBox routeListView = new HBox();
-        routeListView.setSpacing(30);
-        routeListView.getChildren().addAll(view, routeList);
+        VBox chooseRoute = new VBox();
+        chooseRoute.setSpacing(20);
+        chooseRoute.getChildren().addAll(addCommand, buttonBox1, newRoute, buttonBox2);
 
-        VBox vBox = new VBox();
-        vBox.setSpacing(10);
-        vBox.getChildren().addAll(label, hBox, routeListView, save, delete);
+        VBox existingRoute = new VBox();
+        existingRoute.setSpacing(20);
+        existingRoute.getChildren().addAll(savedRoutes, deleteRoute, routeList, executeRoute);
 
-        pane.setLeft(vBox);
+        HBox routes = new HBox();
+        routes.setSpacing(50);
+        routes.getChildren().addAll(chooseRoute, existingRoute);
+
+        pane.setCenter(routes);
 
         return pane;
     }

@@ -134,7 +134,7 @@ public class MainMenu extends Application {
         });
 
         save.setOnAction(actionEvent -> {
-            routeList.getItems().add(route);
+            routeList.getItems().add(FXCollections.observableArrayList(route));
             for (int i = 0; i < route.size(); i++){
                 System.out.println(route.get(i));
             }

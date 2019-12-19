@@ -34,31 +34,26 @@ public class MainMenu extends Application {
 
         Menu changelogMenu = new Menu("Changelog");
         Menu routeMenu = new Menu("Route");
-        Menu routeListMenu = new Menu("Route List");
         Menu pcControlMenu = new Menu("PC Control");
 
         MenuItem changelogItem = new MenuItem("Changelog");
         MenuItem routeItem = new MenuItem("Route");
-        MenuItem routeListItem = new MenuItem("Route List");
         MenuItem pcControlItem = new MenuItem("PC Control");
 
         changelogMenu.getItems().add(changelogItem);
         routeMenu.getItems().add(routeItem);
-        routeListMenu.getItems().add(routeListItem);
         pcControlMenu.getItems().add(pcControlItem);
 
-        menuBar.getMenus().addAll(changelogMenu, routeMenu, routeListMenu, pcControlMenu);
+        menuBar.getMenus().addAll(changelogMenu, routeMenu, pcControlMenu);
 
         borderPane.setTop(menuBar);
 
         Label changeLog = createLabel();
         BorderPane route = Route();
-        ListView routeList = createListView();
         BorderPane pcControl = createControls();
 
         changelogItem.setOnAction((event) -> borderPane.setCenter(changeLog));
         routeItem.setOnAction((event) -> borderPane.setCenter(route));
-        routeListItem.setOnAction((event) -> borderPane.setCenter(routeList));
         pcControlItem.setOnAction((event) -> borderPane.setCenter(pcControl));
 
         borderPane.setCenter(changeLog);
@@ -168,12 +163,6 @@ public class MainMenu extends Application {
 
         return pane;
     }
-
-    private ListView createListView(){
-        ListView view = new ListView();
-        return view;
-    }
-
 
     private BorderPane createControls(){
         BorderPane pane = new BorderPane();

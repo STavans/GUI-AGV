@@ -3,9 +3,6 @@ package bluebotclient.frontend;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -14,16 +11,11 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.awt.*;
-import java.util.List;
 
 public class MainMenu extends Application {
 
@@ -127,7 +119,6 @@ public class MainMenu extends Application {
 
         deleteRoute.setOnAction(event -> {
             int selectedRoute = routeList.getSelectionModel().getSelectedIndex();
-
             if (selectedRoute != -1){
                 routeList.getItems().remove(selectedRoute);
             }
@@ -135,10 +126,16 @@ public class MainMenu extends Application {
 
         save.setOnAction(actionEvent -> {
             routeList.getItems().add(FXCollections.observableArrayList(route));
-            for (int i = 0; i < route.size(); i++){
-                System.out.println(route.get(i));
-            }
+            //for (int i = 0; i < route.size(); i++){
+            //    System.out.println(route.get(i));
+            //}
         });
+
+        executeRoute.setOnAction(event -> {
+            int selectedRoute = routeList.getSelectionModel().getSelectedIndex();
+
+        });
+
         HBox buttonBox1 = new HBox();
         buttonBox1.setSpacing(10);
         buttonBox1.getChildren().addAll(forward, backwards, left, right, stop);

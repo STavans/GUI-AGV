@@ -16,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import bluebotclient.backend.BlueBotConnection;
+import jssc.SerialPort;
 
 public class MainMenu extends Application {
 
@@ -79,6 +81,7 @@ public class MainMenu extends Application {
         Button deleteRoute = new Button("Delete");
         Button save = new Button("Save");
         Button executeRoute = new Button("Execute route");
+        BlueBotConnection connection = new BlueBotConnection(new SerialPort("COM3"));
 
         ListView newRoute = new ListView();
         ListView routeList = new ListView();
@@ -134,6 +137,10 @@ public class MainMenu extends Application {
         executeRoute.setOnAction(event -> {
             int selectedRoute = routeList.getSelectionModel().getSelectedIndex();
 
+            if (selectedRoute != -1) {
+                System.out.println(routeList.getSelectionModel().getSelectedItems());
+                
+            }
         });
 
         HBox buttonBox1 = new HBox();

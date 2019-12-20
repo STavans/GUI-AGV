@@ -5,11 +5,11 @@ import jssc.SerialPortException;
 
 import java.util.Scanner;
 
-class BlueBotConnection {
+public class BlueBotConnection {
     private SerialPort serialPort;
     private Scanner scanner;
 
-    BlueBotConnection(SerialPort serialPort) {
+    public BlueBotConnection(SerialPort serialPort) {
         this.serialPort = serialPort;
         scanner = new Scanner(System.in);
 

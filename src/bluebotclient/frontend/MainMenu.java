@@ -26,33 +26,28 @@ public class MainMenu extends Application {
 
         MenuBar menuBar = new MenuBar();
 
-        Menu changelogMenu = new Menu("Changelog");
         Menu routeMenu = new Menu("Route");
         Menu pcControlMenu = new Menu("PC Control");
 
-        MenuItem changelogItem = new MenuItem("Changelog");
         MenuItem routeItem = new MenuItem("Route");
         MenuItem pcControlItem = new MenuItem("PC Control");
 
-        changelogMenu.getItems().add(changelogItem);
         routeMenu.getItems().add(routeItem);
         pcControlMenu.getItems().add(pcControlItem);
 
-        menuBar.getMenus().addAll(changelogMenu, routeMenu, pcControlMenu);
+        menuBar.getMenus().addAll(routeMenu, pcControlMenu);
 
         borderPane.setTop(menuBar);
 
-        Label changeLog = createLabel();
         BorderPane route = Route();
         BorderPane pcControl = createControls();
 
-        changelogItem.setOnAction((event) -> borderPane.setCenter(changeLog));
         routeItem.setOnAction((event) -> borderPane.setCenter(route));
         pcControlItem.setOnAction((event) -> borderPane.setCenter(pcControl));
 
-        borderPane.setCenter(changeLog);
+        borderPane.setCenter(route);
 
-        Scene scene = new Scene(borderPane, 800, 600);
+        Scene scene = new Scene(borderPane, 900, 700);
 
         stage.initStyle(StageStyle.UTILITY);
         stage.setScene(scene);
@@ -60,27 +55,24 @@ public class MainMenu extends Application {
         stage.show();
     }
 
-    private Label createLabel() {
-        Label label = new Label();
-
-        return label;
-    }
-
-    public BorderPane Route(){
+    public BorderPane Route() {
         ObservableList<String> route = FXCollections.observableArrayList();
         BorderPane pane = new BorderPane();
 
         Label addCommand = new Label("Add command:");
         Label savedRoutes = new Label("Saved Routes: ");
         Button stop = new Button("Stop");
+        Button end = new Button("Einde");
         Button forward = new Button("Forward");
-        Button backwards = new Button("Backwards");
         Button left = new Button("Left");
         Button right = new Button("Right");
         Button deleteCommand = new Button("Delete");
         Button deleteRoute = new Button("Delete");
         Button save = new Button("Save");
         Button executeRoute = new Button("Execute route");
+        Button cancelRoute = new Button("Cancel route");
+        Button resumeRoute = new Button("Resume route");
+        Button pauseRoute = new Button("Pause route");
         BlueBotConnection connection = new BlueBotConnection(new SerialPort("COM3"));
 
         ListView newRoute = new ListView();
@@ -91,14 +83,14 @@ public class MainMenu extends Application {
             route.add("Stop");
         });
 
+        end.setOnAction(actionEvent -> {
+            newRoute.getItems().add("Einde");
+            route.add("Einde");
+        });
+
         forward.setOnAction(actionEvent -> {
             newRoute.getItems().add("Forward");
             route.add("Forward");
-        });
-
-        backwards.setOnAction(actionEvent -> {
-            newRoute.getItems().add("Backwards");
-            route.add("Backwards");
         });
 
         left.setOnAction(actionEvent -> {
@@ -122,7 +114,7 @@ public class MainMenu extends Application {
 
         deleteRoute.setOnAction(event -> {
             int selectedRoute = routeList.getSelectionModel().getSelectedIndex();
-            if (selectedRoute != -1){
+            if (selectedRoute != -1) {
                 routeList.getItems().remove(selectedRoute);
             }
         });
@@ -135,21 +127,51 @@ public class MainMenu extends Application {
         });
 
         executeRoute.setOnAction(event -> {
-            int selectedRoute = routeList.getSelectionModel().getSelectedIndex();
+            connection.writeString("B");
 
-            if (selectedRoute != -1) {
-                System.out.println(routeList.getSelectionModel().getSelectedItems());
-                
+            for (int i = 0; i < route.size(); i++) {
+                String state = route.get(i);
+
+                System.out.println(state);
+                    switch (state){
+                        case "Forward":
+                            connection.writeString("w");
+                            break;
+                        case "Left":
+                            connection.writeString("a");
+                            break;
+                        case "Right":
+                            connection.writeString("d");
+                            break;
+                        case "Stop":
+                            connection.writeString("s");
+                            break;
+                        case "Einde":
+                            connection.writeString("e");
+                            break;
+                    }
             }
+
+            connection.writeString("S");
         });
+
+        cancelRoute.setOnAction(actionEvent -> connection.writeString("C"));
+
+        resumeRoute.setOnAction(actionEvent -> connection.writeString("R"));
+
+        pauseRoute.setOnAction(actionEvent -> connection.writeString("P"));
 
         HBox buttonBox1 = new HBox();
         buttonBox1.setSpacing(10);
-        buttonBox1.getChildren().addAll(forward, backwards, left, right, stop);
+        buttonBox1.getChildren().addAll(forward, left, right, stop, end);
 
         HBox buttonBox2 = new HBox();
         buttonBox2.setSpacing(10);
         buttonBox2.getChildren().addAll(save, deleteCommand);
+
+        HBox buttonBox3 = new HBox();
+        buttonBox3.setSpacing(10);
+        buttonBox3.getChildren().addAll(executeRoute, pauseRoute, resumeRoute, cancelRoute);
 
         VBox chooseRoute = new VBox();
         chooseRoute.setSpacing(20);
@@ -157,7 +179,7 @@ public class MainMenu extends Application {
 
         VBox existingRoute = new VBox();
         existingRoute.setSpacing(20);
-        existingRoute.getChildren().addAll(savedRoutes, deleteRoute, routeList, executeRoute);
+        existingRoute.getChildren().addAll(savedRoutes, deleteRoute, routeList, buttonBox3);
 
         HBox routes = new HBox();
         routes.setSpacing(50);
@@ -168,7 +190,7 @@ public class MainMenu extends Application {
         return pane;
     }
 
-    private BorderPane createControls(){
+    private BorderPane createControls() {
         BorderPane pane = new BorderPane();
         Button button = new Button("Control Toggle");
         TextArea area = new TextArea();
